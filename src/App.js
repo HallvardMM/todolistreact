@@ -1,15 +1,19 @@
-import logo from "./logo.svg";
 import "./App.css";
 import * as React from "react";
-import Button from "@mui/material/Button";
-import UserGrid from "./adminPage/UserGrid";
+import UserGrid from "./admin/UserGrid";
+import CreateUser from "./user/CreateUser";
+import SignIn from "./user/SignIn";
+import UsersLists from "./todolist/UsersLists";
+import Profile from "./user/Profile";
 
-function App() {
+import Header from "./common/Header";
+
+export default function App() {
   return (
     <div className="App">
-      <UserGrid></UserGrid>
+      <Header name="Hallvard10" admin loggedIn>
+        <Profile />
+      </Header>
     </div>
   );
 }
-
-export default App;
