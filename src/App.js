@@ -1,19 +1,14 @@
 import "./App.css";
-import * as React from "react";
-import UserGrid from "./admin/UserGrid";
-import CreateUser from "./user/CreateUser";
+import React from "react";
 import SignIn from "./user/SignIn";
-import UsersLists from "./todolist/UsersLists";
-import Profile from "./user/Profile";
-
-import Header from "./common/Header";
+import BasicHeader from "./common/BasicHeader";
 
 export default function App() {
   return (
     <div className="App">
-      <Header name="Hallvard10" admin loggedIn>
-        <Profile />
-      </Header>
+      <BasicHeader>
+        <SignIn />
+      </BasicHeader>
     </div>
   );
 }

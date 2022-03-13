@@ -32,7 +32,13 @@ export default function CreateUser(props) {
   };
 
   return (
-    <div className="CreateUser">
+    <div
+      className="CreateUser"
+      style={{
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
       {props.loggedIn && (
         <Typography variant="h3" component="div">
           Cannot create user while logged in

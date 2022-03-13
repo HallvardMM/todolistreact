@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -15,27 +15,38 @@ import PersonIcon from "@mui/icons-material/Person";
 import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Drawer from "@mui/material/Drawer";
+import { Outlet, useNavigate } from "react-router-dom";
+import { observer } from "mobx-react-lite";
+import Auth from "../state/Authentication";
 
-function SideList(props) {
+const SideList = observer(() => {
+  let authState = Auth;
+
+  const navigate = useNavigate();
   return (
     <div>
-      {props.loggedIn && (
+      {authState.loggedIn && (
         <div>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             ToDoList
           </Typography>
           <Typography variant="subtitle1" component="div" sx={{ flexGrow: 1 }}>
-            Signed In as: {props.name}
+            Signed In as: {authState.name}
           </Typography>
           <List>
-            <ListItem button key={"Profile"}>
+            <ListItem
+              onClick={() => navigate("/profile")}
+              button
+              key={"Profile"}
+            >
               <ListItemIcon>
                 <PersonIcon />
               </ListItemIcon>
               <ListItemText primary={"Profile"} />
             </ListItem>
-            {props.admin && (
-              <ListItem button key={"Admin"}>
+
+            {authState.admin && (
+              <ListItem onClick={() => navigate("/admin")} button key={"Admin"}>
                 <ListItemIcon>
                   <SupervisorAccountIcon />
                 </ListItemIcon>
@@ -43,7 +54,13 @@ function SideList(props) {
               </ListItem>
             )}
             <Divider />
-            <ListItem button key={"Logout"}>
+            <ListItem
+              onClick={() => {
+                authState.logout(), navigate("/");
+              }}
+              button
+              key={"Logout"}
+            >
               <ListItemIcon>
                 <LogoutIcon />
               </ListItemIcon>
@@ -52,18 +69,21 @@ function SideList(props) {
           </List>
         </div>
       )}
+      <Outlet />
     </div>
   );
-}
+});
 
-export default function Header(props) {
+const Header = observer((props) => {
+  let authState = Auth;
   const [drawer, setDrawer] = useState(false);
+  const navigate = useNavigate();
   return (
     <div>
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static">
           <Toolbar>
-            {props.loggedIn && (
+            {authState.loggedIn && (
               <IconButton
                 size="large"
                 edge="start"
@@ -77,29 +97,45 @@ export default function Header(props) {
             )}
             <Drawer open={drawer} onClose={() => setDrawer(false)}>
               <SideList
-                name={props.name}
-                admin={props.admin}
-                loggedIn={props.loggedIn}
+                name={authState.user}
+                admin={authState.admin}
+                loggedIn={authState.loggedIn}
               ></SideList>
             </Drawer>
-            {props.loggedIn && (
+            {authState.loggedIn && (
               <Typography
                 variant="subtitle1"
                 component="div"
                 sx={{ flexGrow: 1 }}
               >
-                Signed In as: {props.name}
+                Signed In as: {authState.user}
               </Typography>
             )}
-            <Typography variant="h6" component="div" sx={{ flexGrow: 75 }}>
+            <Typography
+              onClick={() => navigate("/")}
+              variant="h6"
+              sx={{ flexGrow: 75 }}
+              component="span"
+            >
               ToDoList
             </Typography>
-            {props.admin && <Button color="inherit">Admin</Button>}
-            {props.loggedIn && <Button color="inherit">Profile</Button>}
+            {authState.admin && (
+              <Button onClick={() => navigate("/admin")} color="inherit">
+                Admin
+              </Button>
+            )}
+            {authState.loggedIn && (
+              <Button onClick={() => navigate("/profile")} color="inherit">
+                Profile
+              </Button>
+            )}
           </Toolbar>
         </AppBar>
       </Box>
       {props.children}
+      <Outlet />
     </div>
   );
-}
+});
+
+export default Header;

@@ -6,33 +6,23 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { fetchJson } from "../api/fetchJson";
+import { observer } from "mobx-react-lite";
+import Auth from "../state/Authentication";
 
-async function fetchJson(url) {
-  try {
-    let res = await fetch(url);
-    return await res.json();
-  } catch (error) {
-    return error;
-    console.log(error);
-  }
-}
-
-export default function UsersLists(props) {
+const UsersLists = observer(() => {
   const [newListName, setNewListName] = useState("");
   const [ownerLists, setOwnerLists] = useState([]);
   const [writeLists, setWriteLists] = useState([]);
   const [readLists, setReadLists] = useState([]);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
-
+  let authState = Auth;
   useEffect(() => {
-    fetchJson(`/ToDoList/getUsersLists/${props.name}`)
+    fetchJson(`/ToDoList/getUsersLists/${authState.user}`)
       .then((data) => {
         setOwnerLists(data.ownerList),
           setWriteLists(data.writeList),
@@ -64,44 +54,38 @@ export default function UsersLists(props) {
   };
 
   return (
-    <div className="CreateUser">
-      {props.loggedIn && (
+    <div className="UsersList">
+      <div style={{ display: "flex", flexDirection: "column" }}>
         <Typography variant="h3" component="div">
-          Cannot sign in while signed in
+          Home page
         </Typography>
-      )}
-      {!props.loggedIn && (
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <FormControl variant="standard">
-            <Typography variant="h3" component="div">
-              Home page
-            </Typography>
-            <InputLabel htmlFor="name">Create new list</InputLabel>
-            <Input
-              id="name"
-              value={newListName}
-              onChange={(x) => setNewListName(x)}
-            />
-          </FormControl>
-          <Button variant="contained" onClick={() => console.log("Create")}>
-            Create
-          </Button>
-          <Typography variant="h6" component="div">
-            Owner access list
-          </Typography>
-          <List>{listView(ownerLists)}</List>
+        <FormControl variant="standard">
+          <InputLabel htmlFor="name">Create new list</InputLabel>
+          <Input
+            id="name"
+            value={newListName}
+            onChange={(x) => setNewListName(x)}
+          />
+        </FormControl>
+        <Button variant="contained" onClick={() => console.log("Create")}>
+          Create
+        </Button>
+        <Typography variant="h6" component="div">
+          Owner access list
+        </Typography>
+        <List>{listView(ownerLists)}</List>
 
-          <Typography variant="h6" component="div">
-            Writer access lists
-          </Typography>
-          <List>{listView(writeLists)}</List>
+        <Typography variant="h6" component="div">
+          Writer access lists
+        </Typography>
+        <List>{listView(writeLists)}</List>
 
-          <Typography variant="h6" component="div">
-            Reader access list
-          </Typography>
-          <List>{listView(readLists)}</List>
-        </div>
-      )}
+        <Typography variant="h6" component="div">
+          Reader access list
+        </Typography>
+        <List>{listView(readLists)}</List>
+      </div>
     </div>
   );
-}
+});
+export default UsersLists;

@@ -1,23 +1,51 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Button from "@mui/material/Button";
+import { useNavigate } from "react-router-dom";
+import Auth from "../state/Authentication";
+import { fetchJson } from "../api/fetchJson";
+import { observer } from "mobx-react-lite";
 
-export default function SignIn(props) {
+const SignIn = observer(() => {
+  let authState = Auth;
   const [values, setValues] = useState({
     name: "",
     password: "",
     showPassword: false,
   });
+  const [error, setError] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
+  };
+
+  useEffect(() => {
+    if (loggedIn) {
+      console.log("authState in Signin" + authState.user);
+
+      navigate("/main");
+    }
+  }, [loggedIn]);
+
+  const validate = (name, password) => {
+    fetchJson(`ToDoList/loginservice/${name}/${password}`).then((data) => {
+      if (data.name) {
+        authState.login(data.name, data.admin);
+        setLoggedIn(true);
+      } else {
+        setError(true);
+      }
+    });
   };
 
   const handleClickShowPassword = (rePassword) => {
@@ -39,62 +67,61 @@ export default function SignIn(props) {
   };
 
   return (
-    <div className="CreateUser">
-      {props.loggedIn && (
+    <div
+      className="SignIn"
+      style={{ display: "flex", justifyContent: "center" }}
+    >
+      <div style={{ display: "flex", flexDirection: "column", width: "50%" }}>
         <Typography variant="h3" component="div">
-          Cannot sign in while signed in
+          Sign in
         </Typography>
-      )}
-      {!props.loggedIn && (
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <Typography variant="h3" component="div">
-            Sign in
-          </Typography>
-          <FormControl variant="standard">
-            <InputLabel htmlFor="name">Name</InputLabel>
-            <Input
-              id="name"
-              value={values.name}
-              onChange={handleChange("name")}
-            />
-          </FormControl>
-          <FormControl variant="standard">
-            <InputLabel htmlFor="password">Password</InputLabel>
-            <Input
-              id="password"
-              type={values.showPassword ? "text" : "password"}
-              value={values.password}
-              onChange={handleChange("password")}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={() => handleClickShowPassword(false)}
-                    onMouseDown={() => handleMouseDownPassword}
-                  >
-                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-          </FormControl>
+        <FormControl error={error} variant="standard">
+          <InputLabel htmlFor="name">Name</InputLabel>
+          <Input
+            id="name"
+            value={values.name}
+            onChange={handleChange("name")}
+          />
+        </FormControl>
+        <FormControl error={error} variant="standard">
+          <InputLabel htmlFor="password">Password</InputLabel>
+          <Input
+            id="password"
+            type={values.showPassword ? "text" : "password"}
+            value={values.password}
+            onChange={handleChange("password")}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={() => handleClickShowPassword(false)}
+                  onMouseDown={() => handleMouseDownPassword}
+                >
+                  {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+          {error && (
+            <FormHelperText id="password-error-text">
+              Wrong password or username
+            </FormHelperText>
+          )}
+        </FormControl>
 
-          <FormGroup>
-            <FormControlLabel
-              control={<Switch defaultChecked />}
-              label="Stay logged in"
-            />
-          </FormGroup>
+        <Button
+          variant="contained"
+          onClick={() => validate(values.name, values.password)}
+        >
+          Login
+        </Button>
 
-          <Button variant="contained" onClick={() => console.log("Create")}>
-            Login
-          </Button>
-
-          <Button variant="contained" onClick={() => console.log("Return")}>
-            Create User
-          </Button>
-        </div>
-      )}
+        <Button variant="contained" onClick={() => navigate("/createuser")}>
+          Create User
+        </Button>
+      </div>
     </div>
   );
-}
+});
+
+export default SignIn;

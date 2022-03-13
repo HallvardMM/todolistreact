@@ -1,4 +1,4 @@
-export default async function fetchJson(url) {
+export async function fetchJson(url) {
   try {
     let res = await fetch(url);
     return await res.json();

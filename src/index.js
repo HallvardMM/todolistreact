@@ -3,10 +3,23 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import UserGrid from "./admin/UserGrid";
+import Profile from "./user/Profile";
+import CreateUser from "./user/CreateUser";
+import Main from "./todolist/Main";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route path="main" element={<Main />} />
+        <Route path="profile" element={<Profile />} />
+        <Route path="admin" element={<UserGrid />} />
+        <Route path="createuser" element={<CreateUser />} />
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById("root")
 );
