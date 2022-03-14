@@ -13,31 +13,34 @@ import ListView from "./todolist/ListView";
 import ChangeAccess from "./todolist/ChangeAccess";
 import BasicHeader from "./common/BasicHeader";
 import { Typography } from "@mui/material";
+import ThemeContainer from "./common/ThemeContainer";
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="main" element={<Main />} />
-        <Route path="profile" element={<Profile />} />
-        <Route path="admin" element={<UserGrid />} />
-        <Route path="adminChart" element={<Chart />} />
-        <Route path="createuser" element={<CreateUser />} />
-        <Route path="listview:listId" element={<ListView />} />
-        <Route path="changeaccess:listId" element={<ChangeAccess />} />
-        <Route
-          path="*"
-          element={
-            <BasicHeader>
-              <Typography variant="h3" component="div">
-                There's nothing here!
-              </Typography>
-            </BasicHeader>
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+    <ThemeContainer>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="main" element={<Main />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="admin" element={<UserGrid />} />
+          <Route path="adminChart" element={<Chart />} />
+          <Route path="createuser" element={<CreateUser />} />
+          <Route path="listview:listId" element={<ListView />} />
+          <Route path="changeaccess:listId" element={<ChangeAccess />} />
+          <Route
+            path="*"
+            element={
+              <BasicHeader>
+                <Typography variant="h3" component="div">
+                  There's nothing here!
+                </Typography>
+              </BasicHeader>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </ThemeContainer>
   </React.StrictMode>,
   document.getElementById("root")
 );

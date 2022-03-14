@@ -89,6 +89,7 @@ const ShareAccess = observer((props) => {
         ))}
       </TextField>
       <Button
+        color="secondary"
         style={{ height: "35px" }}
         variant="contained"
         onClick={() => sendShareAccess()}

@@ -41,7 +41,7 @@ const UsersLists = observer(() => {
 
   let listView = (listToView, notDelete) => {
     return listToView?.map((object, id) => (
-      <div>
+      <div style={{ width: "300px" }}>
         {notDelete ? (
           <ListItem key={id} onClick={() => navigate(`/listview${object.id}`)}>
             <ListItemText
@@ -55,6 +55,7 @@ const UsersLists = observer(() => {
             onClick={() => navigate(`/listview${object.id}`)}
             secondaryAction={
               <IconButton
+                color="danger"
                 edge="end"
                 aria-label="delete"
                 onClick={() => deleteList(object.id)}
@@ -144,6 +145,7 @@ const UsersLists = observer(() => {
                 </FormControl>
                 <Button
                   variant="contained"
+                  color="secondary"
                   onClick={() => sendCreatedList(newListName)}
                 >
                   Create

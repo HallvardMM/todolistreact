@@ -154,6 +154,8 @@ export default function CreateUser() {
           </FormControl>
           <Button
             variant="contained"
+            color="secondary"
+            style={{ marginBottom: "10px" }}
             onClick={() => {
               if (values.password === values.rePassword) {
                 sendUser(values.name, values.email, values.password);
@@ -165,7 +167,11 @@ export default function CreateUser() {
             Create
           </Button>
 
-          <Button variant="contained" onClick={() => navigate("/")}>
+          <Button
+            color="secondary"
+            variant="contained"
+            onClick={() => navigate("/")}
+          >
             Back
           </Button>
         </div>

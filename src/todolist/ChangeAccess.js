@@ -65,6 +65,7 @@ const ChangeAccess = observer((props) => {
             {"Access to: " + listName}
           </Typography>
           <Button
+            color="secondary"
             variant="contained"
             onClick={() => navigate(`/listview${params.listId}`)}
           >
@@ -74,7 +75,7 @@ const ChangeAccess = observer((props) => {
             Write access
           </Typography>
           {writers.map((object, id) => (
-            <div style={{ display: "flex" }}>
+            <div style={{ display: "flex", marginBottom: "5px" }}>
               <Typography
                 style={{ width: "150px" }}
                 variant="h6"
@@ -83,6 +84,7 @@ const ChangeAccess = observer((props) => {
                 {object}
               </Typography>
               <Button
+                color="secondary"
                 style={{ height: "35px" }}
                 variant="contained"
                 onClick={() => sendShareAccess(object, false)}
@@ -90,6 +92,7 @@ const ChangeAccess = observer((props) => {
                 Read
               </Button>
               <Button
+                color="danger"
                 style={{ height: "35px" }}
                 variant="contained"
                 onClick={() => removeAccess(object)}
@@ -112,6 +115,7 @@ const ChangeAccess = observer((props) => {
               </Typography>
 
               <Button
+                color="secondary"
                 style={{ height: "35px" }}
                 variant="contained"
                 onClick={() => sendShareAccess(object, true)}
@@ -119,6 +123,7 @@ const ChangeAccess = observer((props) => {
                 Write
               </Button>
               <Button
+                color="danger"
                 style={{ height: "35px" }}
                 variant="contained"
                 onClick={() => removeAccess(object)}

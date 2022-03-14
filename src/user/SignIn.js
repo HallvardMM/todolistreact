@@ -111,12 +111,17 @@ const SignIn = observer(() => {
 
         <Button
           variant="contained"
+          color="secondary"
+          style={{ marginBottom: "10px" }}
           onClick={() => validate(values.name, values.password)}
         >
           Login
         </Button>
-
-        <Button variant="contained" onClick={() => navigate("/createuser")}>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => navigate("/createuser")}
+        >
           Create User
         </Button>
       </div>

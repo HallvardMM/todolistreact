@@ -112,7 +112,11 @@ const Profile = observer((props) => {
             <Typography variant="h3" component="div">
               Profile
             </Typography>
-            <Button variant="contained" onClick={() => navigate("/main")}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => navigate("/main")}
+            >
               Return to home page
             </Button>
             <Typography variant="h6" component="div">
@@ -171,6 +175,7 @@ const Profile = observer((props) => {
             <Button
               disabled={values.email !== values.reEmail}
               variant="contained"
+              color="secondary"
               onClick={() => changeEmail(values.email)}
             >
               Save
@@ -270,6 +275,7 @@ const Profile = observer((props) => {
             <Button
               disabled={values.password !== values.rePassword}
               variant="contained"
+              color="secondary"
               onClick={() => changePassword(values.password)}
             >
               Save

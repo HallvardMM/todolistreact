@@ -5,6 +5,8 @@ import Alert from "@mui/material/Alert";
 import { fetchJson } from "../api/fetchJson";
 import Header from "../common/Header";
 import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import { useNavigate } from "react-router-dom";
 
 const columns = [
   { field: "id", headerName: "ID", width: 300 },
@@ -34,6 +36,7 @@ export default function UserGrid() {
   const [pageSize, setPageSize] = useState(5);
   const [loading, setLoading] = useState(true);
   const [snackbar, setSnackbar] = useState(null);
+  const navigate = useNavigate();
 
   const handleCellEditCommit = React
     .useCallback
@@ -81,6 +84,13 @@ export default function UserGrid() {
         <Typography variant="h3" component="div">
           Admin Page
         </Typography>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => navigate("/main")}
+        >
+          Return to home page
+        </Button>
         <DataGrid
           autoHeight
           onCellEditCommit={handleCellEditCommit}

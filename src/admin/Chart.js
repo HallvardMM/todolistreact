@@ -4,15 +4,19 @@ import Header from "../common/Header";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import { observer } from "mobx-react-lite";
 import Auth from "../state/Authentication";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import { useNavigate } from "react-router-dom";
 
 const Chart = observer(() => {
   let authState = Auth;
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState([]);
+
   const [options, setOptions] = useState({
     chart: {
       type: "bar",
@@ -58,6 +62,13 @@ const Chart = observer(() => {
         <Typography variant="h3" component="div">
           Admin Chart
         </Typography>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => navigate("/main")}
+        >
+          Return to home page
+        </Button>
         {loading ? (
           <Box sx={{ display: "flex" }}>
             <CircularProgress />

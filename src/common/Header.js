@@ -28,10 +28,20 @@ const SideList = observer(() => {
     <div>
       {authState.loggedIn && (
         <div>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography
+            color="primary"
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1 }}
+          >
             ToDoList
           </Typography>
-          <Typography variant="subtitle1" component="div" sx={{ flexGrow: 1 }}>
+          <Typography
+            color="primary"
+            variant="subtitle1"
+            component="div"
+            sx={{ flexGrow: 1 }}
+          >
             Signed In as: {authState.name}
           </Typography>
           <List>
@@ -41,7 +51,7 @@ const SideList = observer(() => {
               key={"Profile"}
             >
               <ListItemIcon>
-                <PersonIcon />
+                <PersonIcon color="secondary" />
               </ListItemIcon>
               <ListItemText primary={"Profile"} />
             </ListItem>
@@ -49,7 +59,7 @@ const SideList = observer(() => {
             {authState.admin && (
               <ListItem onClick={() => navigate("/admin")} button key={"Admin"}>
                 <ListItemIcon>
-                  <SupervisorAccountIcon />
+                  <SupervisorAccountIcon color="secondary" />
                 </ListItemIcon>
                 <ListItemText primary={"Admin"} />
               </ListItem>
@@ -61,7 +71,7 @@ const SideList = observer(() => {
                 key={"adminChart"}
               >
                 <ListItemIcon>
-                  <BarChartIcon />
+                  <BarChartIcon color="secondary" />
                 </ListItemIcon>
                 <ListItemText primary={"Chart"} />
               </ListItem>
@@ -75,7 +85,7 @@ const SideList = observer(() => {
               key={"Logout"}
             >
               <ListItemIcon>
-                <LogoutIcon />
+                <LogoutIcon color="secondary" />
               </ListItemIcon>
               <ListItemText primary={"Logout"} />
             </ListItem>

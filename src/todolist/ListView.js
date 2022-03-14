@@ -85,20 +85,32 @@ const ListView = observer(() => {
             <Typography variant="h3" component="div">
               {listName}
             </Typography>
-            <div style={{ display: "flex", flexDirection: "row" }}>
-              <Button variant="contained" onClick={() => navigate("/main")}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                marginBottom: "10px",
+              }}
+            >
+              <Button
+                color="secondary"
+                variant="contained"
+                onClick={() => navigate("/main")}
+              >
                 Back
               </Button>
               {isOwner && (
                 <div>
                   <Button
                     variant="contained"
+                    color="secondary"
                     onClick={() => navigate(`/changeaccess${params.listId}`)}
                   >
                     Change access
                   </Button>
                   <Button
                     variant="contained"
+                    color="secondary"
                     onClick={() => setShowShareAccess(!showShareAccess)}
                   >
                     {showShareAccess ? "Hide share" : "Share access"}
@@ -131,6 +143,7 @@ const ListView = observer(() => {
                 </FormControl>
                 <Button
                   variant="contained"
+                  color="secondary"
                   onClick={() => sendCreatedGroup(newGroupName)}
                 >
                   Create
