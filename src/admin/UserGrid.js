@@ -7,40 +7,34 @@ import Header from "../common/Header";
 import Typography from "@mui/material/Typography";
 
 const columns = [
-  { field: "id", headerName: "ID", width: 300, sortable: false },
+  { field: "id", headerName: "ID", width: 300 },
   {
     field: "name",
     headerName: "Name",
     width: 300,
-    sortable: false,
     editable: true,
   },
   {
     field: "email",
     headerName: "Email",
     width: 300,
-    sortable: false,
     editable: true,
   },
   {
     field: "admin",
     headerName: "Admin",
     width: 300,
-    sortable: false,
     editable: true,
   },
-  { field: "created", headerName: "Created", width: 300, sortable: false },
+  { field: "created", headerName: "Created", width: 300 },
 ];
 
 export default function UserGrid() {
   const [page, setPage] = useState(0);
   const [rows, setRows] = useState([]);
-  const [entities, setEntities] = useState(10);
   const [pageSize, setPageSize] = useState(5);
-  const [loading, setLoading] = useState(false);
-  const [selectionModel, setSelectionModel] = useState([]);
-  const [snackbar, setSnackbar] = React.useState(null);
-  const prevSelectionModel = useRef(selectionModel);
+  const [loading, setLoading] = useState(true);
+  const [snackbar, setSnackbar] = useState(null);
 
   const handleCellEditCommit = React
     .useCallback
@@ -73,29 +67,12 @@ export default function UserGrid() {
     ();
 
   useEffect(() => {
-    let active = true;
-
-    (async () => {
-      setLoading(true);
-      const newRows = await fetchJson(
-        `ToDoList/allUsers/${page * pageSize}/${pageSize}`
-      );
-
-      if (!active) {
-        return;
-      }
-
-      setRows(newRows.users);
-      setEntities(newRows.numberOfUsers);
+    setLoading(true);
+    fetchJson(`ToDoList/allUsers/`).then((data) => {
+      setRows(data.users);
       setLoading(false);
-      setTimeout(() => {
-        setSelectionModel(prevSelectionModel.current);
-      });
-    })();
-    return () => {
-      active = false;
-    };
-  }, [page, pageSize]);
+    });
+  }, []);
 
   //https://mui.com/components/data-grid/selection/#usage-with-server-side-pagination
 
@@ -108,22 +85,11 @@ export default function UserGrid() {
         <DataGrid
           autoHeight
           onCellEditCommit={handleCellEditCommit}
-          disableColumnFilter={true}
           pageSize={pageSize}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
           rowsPerPageOptions={[5, 10, 20]}
           columns={columns}
           rows={rows}
-          rowCount={entities}
-          paginationMode="server"
-          onPageChange={(newPage) => {
-            prevSelectionModel.current = selectionModel;
-            setPage(newPage);
-          }}
-          onSelectionModelChange={(newSelectionModel) => {
-            setSelectionModel(newSelectionModel);
-          }}
-          selectionModel={selectionModel}
           loading={loading}
         />
         {!!snackbar && (
