@@ -5,6 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import UserGrid from "./admin/UserGrid";
+import Chart from "./admin/Chart";
 import Profile from "./user/Profile";
 import CreateUser from "./user/CreateUser";
 import Main from "./todolist/Main";
@@ -21,6 +22,7 @@ ReactDOM.render(
         <Route path="main" element={<Main />} />
         <Route path="profile" element={<Profile />} />
         <Route path="admin" element={<UserGrid />} />
+        <Route path="adminChart" element={<Chart />} />
         <Route path="createuser" element={<CreateUser />} />
         <Route path="listview:listId" element={<ListView />} />
         <Route path="changeaccess:listId" element={<ChangeAccess />} />

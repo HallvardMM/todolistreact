@@ -13,6 +13,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import { Button } from "@mui/material";
 import ShareAccess from "./ShareAccess";
+import PointGroup from "./PointGroup";
 
 const ListView = observer(() => {
   let params = useParams();
@@ -113,7 +114,6 @@ const ListView = observer(() => {
                 setShowShareAccess={setShowShareAccess}
               ></ShareAccess>
             )}
-
             {isOwner && (
               <div>
                 <FormControl error={error !== ""} variant="standard">
@@ -137,8 +137,11 @@ const ListView = observer(() => {
                 </Button>
               </div>
             )}
-            {isWriter && <p>Writer</p>}
-            {isReader && <p>Reader</p>}
+            {pointGroups?.map((object, id) => (
+              <div>
+                <PointGroup id={id} pgId={object}></PointGroup>
+              </div>
+            ))}
           </div>
         )}
       </div>

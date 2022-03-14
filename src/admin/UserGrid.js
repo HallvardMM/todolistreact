@@ -30,7 +30,6 @@ const columns = [
 ];
 
 export default function UserGrid() {
-  const [page, setPage] = useState(0);
   const [rows, setRows] = useState([]);
   const [pageSize, setPageSize] = useState(5);
   const [loading, setLoading] = useState(true);

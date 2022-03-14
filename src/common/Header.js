@@ -13,6 +13,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import PersonIcon from "@mui/icons-material/Person";
 import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
+import BarChartIcon from "@mui/icons-material/BarChart";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Drawer from "@mui/material/Drawer";
 import { Outlet, useNavigate } from "react-router-dom";
@@ -51,6 +52,18 @@ const SideList = observer(() => {
                   <SupervisorAccountIcon />
                 </ListItemIcon>
                 <ListItemText primary={"Admin"} />
+              </ListItem>
+            )}
+            {authState.admin && (
+              <ListItem
+                onClick={() => navigate("/adminChart")}
+                button
+                key={"adminChart"}
+              >
+                <ListItemIcon>
+                  <BarChartIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Chart"} />
               </ListItem>
             )}
             <Divider />
@@ -123,6 +136,11 @@ const Header = observer((props) => {
             {authState.admin && (
               <Button onClick={() => navigate("/admin")} color="inherit">
                 Admin
+              </Button>
+            )}
+            {authState.admin && (
+              <Button onClick={() => navigate("/adminChart")} color="inherit">
+                Chart
               </Button>
             )}
             {authState.loggedIn && (
