@@ -3,6 +3,8 @@ import React, { useState, useEffect, useRef } from "react";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { fetchJson } from "../api/fetchJson";
+import Header from "../common/Header";
+import Typography from "@mui/material/Typography";
 
 const columns = [
   { field: "id", headerName: "ID", width: 300, sortable: false },
@@ -98,33 +100,38 @@ export default function UserGrid() {
   //https://mui.com/components/data-grid/selection/#usage-with-server-side-pagination
 
   return (
-    <div className="adminPage" style={{ width: "100%" }}>
-      <DataGrid
-        autoHeight
-        onCellEditCommit={handleCellEditCommit}
-        disableColumnFilter={true}
-        pageSize={pageSize}
-        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-        rowsPerPageOptions={[5, 10, 20]}
-        columns={columns}
-        rows={rows}
-        rowCount={entities}
-        paginationMode="server"
-        onPageChange={(newPage) => {
-          prevSelectionModel.current = selectionModel;
-          setPage(newPage);
-        }}
-        onSelectionModelChange={(newSelectionModel) => {
-          setSelectionModel(newSelectionModel);
-        }}
-        selectionModel={selectionModel}
-        loading={loading}
-      />
-      {!!snackbar && (
-        <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
-          <Alert {...snackbar} onClose={handleCloseSnackbar} />
-        </Snackbar>
-      )}
-    </div>
+    <Header>
+      <div className="adminPage" style={{ width: "100%" }}>
+        <Typography variant="h3" component="div">
+          Admin Page
+        </Typography>
+        <DataGrid
+          autoHeight
+          onCellEditCommit={handleCellEditCommit}
+          disableColumnFilter={true}
+          pageSize={pageSize}
+          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+          rowsPerPageOptions={[5, 10, 20]}
+          columns={columns}
+          rows={rows}
+          rowCount={entities}
+          paginationMode="server"
+          onPageChange={(newPage) => {
+            prevSelectionModel.current = selectionModel;
+            setPage(newPage);
+          }}
+          onSelectionModelChange={(newSelectionModel) => {
+            setSelectionModel(newSelectionModel);
+          }}
+          selectionModel={selectionModel}
+          loading={loading}
+        />
+        {!!snackbar && (
+          <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
+            <Alert {...snackbar} onClose={handleCloseSnackbar} />
+          </Snackbar>
+        )}
+      </div>
+    </Header>
   );
 }

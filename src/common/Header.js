@@ -112,10 +112,11 @@ const Header = observer((props) => {
               </Typography>
             )}
             <Typography
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/main")}
               variant="h6"
               sx={{ flexGrow: 75 }}
               component="span"
+              textAlign="center"
             >
               ToDoList
             </Typography>

@@ -8,6 +8,10 @@ import UserGrid from "./admin/UserGrid";
 import Profile from "./user/Profile";
 import CreateUser from "./user/CreateUser";
 import Main from "./todolist/Main";
+import ListView from "./todolist/ListView";
+import ChangeAccess from "./todolist/ChangeAccess";
+import BasicHeader from "./common/BasicHeader";
+import { Typography } from "@mui/material";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -18,6 +22,18 @@ ReactDOM.render(
         <Route path="profile" element={<Profile />} />
         <Route path="admin" element={<UserGrid />} />
         <Route path="createuser" element={<CreateUser />} />
+        <Route path="listview:listId" element={<ListView />} />
+        <Route path="changeaccess:listId" element={<ChangeAccess />} />
+        <Route
+          path="*"
+          element={
+            <BasicHeader>
+              <Typography variant="h3" component="div">
+                There's nothing here!
+              </Typography>
+            </BasicHeader>
+          }
+        />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,
