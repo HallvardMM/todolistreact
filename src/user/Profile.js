@@ -3,6 +3,7 @@ import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
@@ -10,8 +11,13 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Button from "@mui/material/Button";
 import Header from "../common/Header";
 import { useNavigate } from "react-router-dom";
+import validateEmail from "../common/Email";
+import Auth from "../state/Authentication";
+import { fetchJson } from "../api/fetchJson";
+import { observer } from "mobx-react-lite";
 
-export default function CreateUser(props) {
+const Profile = observer((props) => {
+  let authState = Auth;
   const [values, setValues] = useState({
     email: "",
     reEmail: "",
@@ -24,6 +30,8 @@ export default function CreateUser(props) {
     oldCheckPassword: "",
     showOldCheckPassword: false,
   });
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const navigate = useNavigate();
 
@@ -34,6 +42,56 @@ export default function CreateUser(props) {
   const handleMouseDownPassword = (event) => {
     event.preventDefault;
   };
+
+  function changeEmail(email) {
+    if (validateEmail(email)) {
+      fetchJson(
+        `/ToDoList/changeEmail/${authState.user}/${email}/${values.oldCheckMail}`
+      ).then((data) => {
+        console.log(data);
+        if (data === undefined || !data.success) {
+          setEmailError("Could not change email!");
+        } else {
+          setValues({
+            ...values,
+            email: "",
+            reEmail: "",
+            oldCheckMail: "",
+            showOldCheckMail: false,
+          }),
+            setEmailError("");
+        }
+      });
+    } else {
+      setEmailError("Not valid email!");
+    }
+  }
+
+  function changePassword(password) {
+    console.log(password.length);
+    if (password.length >= 10) {
+      fetchJson(
+        `/ToDoList/changePassword/${authState.user}/${password}/${values.oldCheckPassword}`
+      ).then((data) => {
+        if (data === undefined || !data.success) {
+          setPasswordError("Could not change password!");
+        } else {
+          setValues({
+            ...values,
+            password: "",
+            showPassword: false,
+            rePassword: "",
+            showRePassword: false,
+            oldCheckPassword: "",
+            showOldCheckPassword: false,
+          }),
+            setPasswordError("");
+        }
+      });
+    } else {
+      setPasswordError("Password needs to be 10 characters long!");
+    }
+  }
 
   return (
     <Header>
@@ -60,7 +118,7 @@ export default function CreateUser(props) {
             <Typography variant="h6" component="div">
               Change mail
             </Typography>
-            <FormControl variant="standard">
+            <FormControl error={emailError !== ""} variant="standard">
               <InputLabel htmlFor="email">Email</InputLabel>
               <Input
                 id="email"
@@ -68,7 +126,7 @@ export default function CreateUser(props) {
                 onChange={handleChange("email")}
               />
             </FormControl>
-            <FormControl variant="standard">
+            <FormControl error={emailError !== ""} variant="standard">
               <InputLabel htmlFor="reEmail">Re-enter email</InputLabel>
               <Input
                 id="reEmail"
@@ -76,7 +134,7 @@ export default function CreateUser(props) {
                 onChange={handleChange("reEmail")}
               />
             </FormControl>
-            <FormControl variant="standard">
+            <FormControl error={emailError !== ""} variant="standard">
               <InputLabel htmlFor="oldCheckMail">Old password</InputLabel>
               <Input
                 id="oldCheckMail"
@@ -104,8 +162,17 @@ export default function CreateUser(props) {
                   </InputAdornment>
                 }
               />
+              {emailError && (
+                <FormHelperText id="email-error-text">
+                  {emailError}
+                </FormHelperText>
+              )}
             </FormControl>
-            <Button variant="contained" onClick={() => console.log("Return")}>
+            <Button
+              disabled={values.email !== values.reEmail}
+              variant="contained"
+              onClick={() => changeEmail(values.email)}
+            >
               Save
             </Button>
             <Typography variant="h6" component="div">
@@ -193,9 +260,18 @@ export default function CreateUser(props) {
                   </InputAdornment>
                 }
               />
+              {passwordError && (
+                <FormHelperText id="email-error-text">
+                  {passwordError}
+                </FormHelperText>
+              )}
             </FormControl>
 
-            <Button variant="contained" onClick={() => console.log("Create")}>
+            <Button
+              disabled={values.password !== values.rePassword}
+              variant="contained"
+              onClick={() => changePassword(values.password)}
+            >
               Save
             </Button>
           </div>
@@ -203,4 +279,6 @@ export default function CreateUser(props) {
       </div>
     </Header>
   );
-}
+});
+
+export default Profile;
