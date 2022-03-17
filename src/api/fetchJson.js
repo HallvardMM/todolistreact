@@ -4,5 +4,6 @@ export async function fetchJson(url) {
     return await res.json();
   } catch (error) {
     console.log(error);
+    return { error: error };
   }
 }

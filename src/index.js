@@ -14,6 +14,7 @@ import ChangeAccess from "./todolist/ChangeAccess";
 import BasicHeader from "./common/BasicHeader";
 import { Typography } from "@mui/material";
 import ThemeContainer from "./common/ThemeContainer";
+import NoAccess from "./common/NoAccess";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -28,16 +29,7 @@ ReactDOM.render(
           <Route path="createuser" element={<CreateUser />} />
           <Route path="listview:listId" element={<ListView />} />
           <Route path="changeaccess:listId" element={<ChangeAccess />} />
-          <Route
-            path="*"
-            element={
-              <BasicHeader>
-                <Typography variant="h3" component="div">
-                  There's nothing here!
-                </Typography>
-              </BasicHeader>
-            }
-          />
+          <Route path="*" element={<NoAccess text={"Page not found!"} />} />
         </Routes>
       </BrowserRouter>
     </ThemeContainer>

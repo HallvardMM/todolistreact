@@ -66,15 +66,6 @@ const SideList = observer(() => {
               </ListItemIcon>
               <ListItemText primary={"Profile"} />
             </ListItem>
-
-            {authState.admin && (
-              <ListItem onClick={() => navigate("/admin")} button key={"Admin"}>
-                <ListItemIcon>
-                  <SupervisorAccountIcon color="secondary" />
-                </ListItemIcon>
-                <ListItemText primary={"Admin"} />
-              </ListItem>
-            )}
             {authState.admin && (
               <ListItem
                 onClick={() => navigate("/adminChart")}
@@ -85,6 +76,14 @@ const SideList = observer(() => {
                   <BarChartIcon color="secondary" />
                 </ListItemIcon>
                 <ListItemText primary={"Chart"} />
+              </ListItem>
+            )}
+            {authState.admin && (
+              <ListItem onClick={() => navigate("/admin")} button key={"Admin"}>
+                <ListItemIcon>
+                  <SupervisorAccountIcon color="secondary" />
+                </ListItemIcon>
+                <ListItemText primary={"Admin"} />
               </ListItem>
             )}
             <Divider />

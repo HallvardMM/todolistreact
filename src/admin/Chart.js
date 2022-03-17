@@ -15,7 +15,6 @@ const Chart = observer(() => {
   let authState = Auth;
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [users, setUsers] = useState([]);
 
   const [options, setOptions] = useState({
     chart: {

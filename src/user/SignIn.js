@@ -21,7 +21,7 @@ const SignIn = observer(() => {
     password: "",
     showPassword: false,
   });
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
   const navigate = useNavigate();
 
@@ -30,7 +30,7 @@ const SignIn = observer(() => {
   };
 
   useEffect(() => {
-    if (loggedIn) {
+    if (loggedIn || authState.loggedIn) {
       navigate("/main");
     }
   }, [loggedIn]);
@@ -40,11 +40,15 @@ const SignIn = observer(() => {
       name: name,
       password: password,
     }).then((data) => {
+      console.log(data);
+      console.log(data.errorNamePass);
       if (data.name) {
         authState.login(data.name, data.admin);
         setLoggedIn(true);
+      } else if (data.errorNamePass) {
+        setError("Wrong username or password!");
       } else {
-        setError(true);
+        setError("Something unexpected happened!");
       }
     });
   };
@@ -76,7 +80,7 @@ const SignIn = observer(() => {
         <Typography variant="h3" component="div">
           Sign in
         </Typography>
-        <FormControl error={error} variant="standard">
+        <FormControl error={error !== ""} variant="standard">
           <InputLabel htmlFor="name">Name</InputLabel>
           <Input
             id="name"
@@ -84,7 +88,7 @@ const SignIn = observer(() => {
             onChange={handleChange("name")}
           />
         </FormControl>
-        <FormControl error={error} variant="standard">
+        <FormControl error={error !== ""} variant="standard">
           <InputLabel htmlFor="password">Password</InputLabel>
           <Input
             id="password"
@@ -104,9 +108,7 @@ const SignIn = observer(() => {
             }
           />
           {error && (
-            <FormHelperText id="password-error-text">
-              Wrong password or username
-            </FormHelperText>
+            <FormHelperText id="password-error-text">{error}</FormHelperText>
           )}
         </FormControl>
 

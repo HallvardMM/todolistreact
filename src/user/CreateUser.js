@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -12,9 +12,13 @@ import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import BasicHeader from "../common/BasicHeader";
 import { postJson } from "../api/postJson";
+import Auth from "../state/Authentication";
+import { observer } from "mobx-react-lite";
 import validateEmail from "../common/Email";
+import { Tty } from "@mui/icons-material";
 
-export default function CreateUser() {
+const CreateUser = observer(() => {
+  let authState = Auth;
   const [values, setValues] = useState({
     name: "",
     email: "",
@@ -25,6 +29,12 @@ export default function CreateUser() {
   });
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (authState.loggedIn) {
+      navigate("/main");
+    }
+  }, []);
 
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
@@ -61,8 +71,10 @@ export default function CreateUser() {
           } else {
             if (data.success) {
               navigate("/");
-            } else {
+            } else if (data.exists) {
               setError("User exists!");
+            } else {
+              setError("Something unexpected happened!");
             }
           }
         });
@@ -93,7 +105,7 @@ export default function CreateUser() {
           <Typography variant="h3" component="div">
             Create user
           </Typography>
-          <FormControl error={error} variant="standard">
+          <FormControl error={error !== ""} variant="standard">
             <InputLabel htmlFor="name">Name</InputLabel>
             <Input
               id="name"
@@ -101,7 +113,7 @@ export default function CreateUser() {
               onChange={handleChange("name")}
             />
           </FormControl>
-          <FormControl error={error} variant="standard">
+          <FormControl error={error !== ""} variant="standard">
             <InputLabel htmlFor="email">Email</InputLabel>
             <Input
               id="email"
@@ -109,7 +121,7 @@ export default function CreateUser() {
               onChange={handleChange("email")}
             />
           </FormControl>
-          <FormControl error={error} variant="standard">
+          <FormControl error={error !== ""} variant="standard">
             <InputLabel htmlFor="password">Password</InputLabel>
             <Input
               id="password"
@@ -129,7 +141,7 @@ export default function CreateUser() {
               }
             />
           </FormControl>
-          <FormControl error={error} variant="standard">
+          <FormControl error={error !== ""} variant="standard">
             <InputLabel htmlFor="rePassword">Re-enter password</InputLabel>
             <Input
               id="rePassword"
@@ -178,4 +190,6 @@ export default function CreateUser() {
       </div>
     </BasicHeader>
   );
-}
+});
+
+export default CreateUser;
