@@ -29,9 +29,12 @@ const ShareAccess = observer((props) => {
 
   useEffect(() => {
     fetchJson("ToDoList/allUsersName/").then((data) => {
-      console.log(data),
-        setUsers(data.users.filter((e) => e.name !== authState.user)),
+      setUsers(data.users.filter((e) => e.name !== authState.user));
+      if (data.users[0].name !== authState.user) {
         setSelectedUser(data.users[0].name);
+      } else {
+        setSelectedUser(data.users[1].name);
+      }
     });
   }, []);
 
@@ -41,9 +44,8 @@ const ShareAccess = observer((props) => {
       write = true;
     }
     fetchJson(
-      `/ToDoList/shareList/${props.listId}/${authState.user}/${selectedUser}/${write}`
+      `/ToDoList/shareList/${props.listId}/${selectedUser}/${write}`
     ).then((data) => {
-      console.log(data);
       if (data !== undefined) {
         if (data.success) {
           props.setShowShareAccess(false);

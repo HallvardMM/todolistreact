@@ -11,7 +11,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import Auth from "../state/Authentication";
-import { fetchJson } from "../api/fetchJson";
+import { postJson } from "../api/postJson";
 import { observer } from "mobx-react-lite";
 
 const SignIn = observer(() => {
@@ -31,14 +31,15 @@ const SignIn = observer(() => {
 
   useEffect(() => {
     if (loggedIn) {
-      console.log("authState in Signin" + authState.user);
-
       navigate("/main");
     }
   }, [loggedIn]);
 
   const validate = (name, password) => {
-    fetchJson(`ToDoList/loginservice/${name}/${password}`).then((data) => {
+    postJson(`ToDoList/loginservice/`, {
+      name: name,
+      password: password,
+    }).then((data) => {
       if (data.name) {
         authState.login(data.name, data.admin);
         setLoggedIn(true);

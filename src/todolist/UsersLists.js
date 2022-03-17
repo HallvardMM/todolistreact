@@ -10,6 +10,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { postJson } from "../api/postJson";
 import { fetchJson } from "../api/fetchJson";
 import { observer } from "mobx-react-lite";
 import Auth from "../state/Authentication";
@@ -29,7 +30,9 @@ const UsersLists = observer(() => {
   const navigate = useNavigate();
   let authState = Auth;
   useEffect(() => {
-    fetchJson(`/ToDoList/getUsersLists/${authState.user}`)
+    postJson(`/ToDoList/getUsersLists/`, {
+      name: authState.user,
+    })
       .then((data) => {
         console.log(data),
           setOwnerLists(data.ownerList),
@@ -41,9 +44,13 @@ const UsersLists = observer(() => {
 
   let listView = (listToView, notDelete) => {
     return listToView?.map((object, id) => (
-      <div style={{ width: "300px" }}>
+      <div /* style={{ width: "300px" }} */>
         {notDelete ? (
-          <ListItem key={id} onClick={() => navigate(`/listview${object.id}`)}>
+          <ListItem
+            button
+            key={id}
+            onClick={() => navigate(`/listview${object.id}`)}
+          >
             <ListItemText
               primary={"List: " + object.name}
               secondary={"Owner: " + object.owner}
@@ -52,13 +59,16 @@ const UsersLists = observer(() => {
         ) : (
           <ListItem
             key={id}
+            button
             onClick={() => navigate(`/listview${object.id}`)}
             secondaryAction={
               <IconButton
+                onClick={(e) => {
+                  e.stopPropagation(), deleteList(object.id);
+                }}
                 color="danger"
                 edge="end"
                 aria-label="delete"
-                onClick={() => deleteList(object.id)}
               >
                 <DeleteIcon />
               </IconButton>
@@ -81,9 +91,11 @@ const UsersLists = observer(() => {
       ownerLists.find((l) => l.name === listName) === undefined
     ) {
       setLoadingCreate(true);
-      fetchJson(`/ToDoList/createList/${listName}/${authState.user}`)
+      postJson("/ToDoList/createList/", {
+        listName: listName,
+        name: authState.user,
+      })
         .then((data) => {
-          console.log(data);
           if (data === undefined || !data.success) {
             setError("Could not create list!");
           } else {
@@ -98,18 +110,15 @@ const UsersLists = observer(() => {
   }
 
   function deleteList(listId) {
-    console.log(listId);
-    fetchJson(`/ToDoList/deleteList/${listId}/${authState.user}`).then(
-      (data) => {
-        console.log(data);
-        if (!(data === undefined)) {
-          if (data.success) {
-            //Trigger refetch to get ID created by server
-            setListUpdated(!listUpdated);
-          }
+    setLoading(true);
+    fetchJson(`/ToDoList/deleteList/${listId}`).then((data) => {
+      if (!(data === undefined)) {
+        if (data.success) {
+          //Trigger refetch to get ID created by server
+          setListUpdated(!listUpdated);
         }
       }
-    );
+    });
   }
 
   return (

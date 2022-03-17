@@ -9,7 +9,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 
-const ChangeAccess = observer((props) => {
+const ChangeAccess = observer(() => {
   let authState = Auth;
   let params = useParams();
   const [loading, setLoading] = useState(true);
@@ -31,7 +31,7 @@ const ChangeAccess = observer((props) => {
 
   function sendShareAccess(selectedUser, write) {
     fetchJson(
-      `/ToDoList/shareList/${params.listId}/${authState.user}/${selectedUser}/${write}`
+      `/ToDoList/shareList/${params.listId}/${selectedUser}/${write}`
     ).then((data) => {
       if (data !== undefined) {
         if (data.success) {
@@ -42,15 +42,15 @@ const ChangeAccess = observer((props) => {
   }
 
   function removeAccess(selectedUser) {
-    fetchJson(
-      `/ToDoList/removeAccess/${params.listId}/${authState.user}/${selectedUser}`
-    ).then((data) => {
-      if (data !== undefined) {
-        if (data.success) {
-          setLoading(true), setUpdate(true);
+    fetchJson(`/ToDoList/removeAccess/${params.listId}/${selectedUser}`).then(
+      (data) => {
+        if (data !== undefined) {
+          if (data.success) {
+            setLoading(true), setUpdate(true);
+          }
         }
       }
-    });
+    );
   }
 
   return (

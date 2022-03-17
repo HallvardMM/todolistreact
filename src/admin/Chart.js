@@ -49,8 +49,7 @@ const Chart = observer(() => {
 
   useEffect(() => {
     setLoading(true);
-    fetchJson(`ToDoList/fetchAmountOfLists/${authState.user}`).then((data) => {
-      console.log(data);
+    fetchJson("ToDoList/fetchAmountOfLists/").then((data) => {
       setOptions({ ...options, series: data.users });
       setLoading(false);
     });

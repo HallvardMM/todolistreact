@@ -35,8 +35,7 @@ const ListView = observer(() => {
 
   useEffect(() => {
     fetchJson(`ToDoList/getList/${params.listId}`).then((data) => {
-      console.log(data),
-        setListName(data.name),
+      setListName(data.name),
         setOwner(data.owner),
         setWriters(data.writer),
         setReaders(data.reader),
@@ -55,19 +54,16 @@ const ListView = observer(() => {
       pointGroups.find((pg) => pg.name === groupName) === undefined
     ) {
       setLoading(true);
-      fetchJson(
-        `/ToDoList/createGroup/${params.listId}/${groupName}/${authState.user}`
-      )
+      fetchJson(`/ToDoList/createGroup/${params.listId}/${groupName}`)
         .then((data) => {
-          console.log(data);
           if (data === undefined || !data.success) {
             setError("Could not create group!");
           } else {
             //Trigger refetch to get ID created by server
-            setNewGroupName(""), setUpdate(!update);
+            setUpdate(!update);
           }
         })
-        .finally(newGroupName(""));
+        .finally(setNewGroupName(""));
     } else {
       setError("Group name is used or has no name!");
     }

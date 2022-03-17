@@ -11,7 +11,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import BasicHeader from "../common/BasicHeader";
-import { fetchJson } from "../api/fetchJson";
+import { postJson } from "../api/postJson";
 import validateEmail from "../common/Email";
 
 export default function CreateUser() {
@@ -49,13 +49,13 @@ export default function CreateUser() {
   };
 
   const sendUser = (name, email, password) => {
-    //createUserService(name: String,email: String,password: Secret)
     if (password.length >= 10) {
       if (validateEmail(email)) {
-        fetchJson(
-          `ToDoList/createUserService/${name}/${email}/${password}`
-        ).then((data) => {
-          console.log(data);
+        postJson(`ToDoList/createUserService/`, {
+          name: name,
+          email: email,
+          password: password,
+        }).then((data) => {
           if (data === undefined) {
             setError("Something unexpected happened!");
           } else {

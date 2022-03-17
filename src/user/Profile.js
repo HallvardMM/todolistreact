@@ -13,7 +13,7 @@ import Header from "../common/Header";
 import { useNavigate } from "react-router-dom";
 import validateEmail from "../common/Email";
 import Auth from "../state/Authentication";
-import { fetchJson } from "../api/fetchJson";
+import { postJson } from "../api/postJson";
 import { observer } from "mobx-react-lite";
 
 const Profile = observer((props) => {
@@ -45,10 +45,11 @@ const Profile = observer((props) => {
 
   function changeEmail(email) {
     if (validateEmail(email)) {
-      fetchJson(
-        `/ToDoList/changeEmail/${authState.user}/${email}/${values.oldCheckMail}`
-      ).then((data) => {
-        console.log(data);
+      postJson("/ToDoList/changeEmail", {
+        name: authState.user,
+        email: email,
+        password: values.oldCheckMail,
+      }).then((data) => {
         if (data === undefined || !data.success) {
           setEmailError("Could not change email!");
         } else {
@@ -68,11 +69,12 @@ const Profile = observer((props) => {
   }
 
   function changePassword(password) {
-    console.log(password.length);
     if (password.length >= 10) {
-      fetchJson(
-        `/ToDoList/changePassword/${authState.user}/${password}/${values.oldCheckPassword}`
-      ).then((data) => {
+      postJson("/ToDoList/changePassword/", {
+        name: authState.user,
+        newPassword: password,
+        oldPassword: values.oldCheckPassword,
+      }).then((data) => {
         if (data === undefined || !data.success) {
           setPasswordError("Could not change password!");
         } else {

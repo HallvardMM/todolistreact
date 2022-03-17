@@ -13,14 +13,9 @@ const PointGroup = observer((props) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchJson(`ToDoList/fetchGroup/${props.pgId}/${authState.user}`).then(
-      (data) => {
-        console.log(data),
-          setPgName(data.name),
-          setPoints(data.points),
-          setLoading(false);
-      }
-    );
+    fetchJson(`ToDoList/fetchGroup/${props.pgId}`).then((data) => {
+      setPgName(data.name), setPoints(data.points), setLoading(false);
+    });
   }, []);
 
   return (

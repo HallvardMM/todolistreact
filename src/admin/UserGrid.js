@@ -1,12 +1,12 @@
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
-import React, { useState, useEffect, useRef } from "react";
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
-import { fetchJson } from "../api/fetchJson";
-import Header from "../common/Header";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import { useNavigate } from "react-router-dom";
+import { observer } from "mobx-react-lite";
+import Auth from "../state/Authentication";
+import { fetchJson } from "../api/fetchJson";
+import Header from "../common/Header";
 
 const columns = [
   { field: "id", headerName: "ID", width: 300 },
@@ -14,59 +14,26 @@ const columns = [
     field: "name",
     headerName: "Name",
     width: 300,
-    editable: true,
   },
   {
     field: "email",
     headerName: "Email",
     width: 300,
-    editable: true,
   },
   {
     field: "admin",
     headerName: "Admin",
     width: 300,
-    editable: true,
   },
   { field: "created", headerName: "Created", width: 300 },
 ];
 
-export default function UserGrid() {
+const UserGrid = observer(() => {
+  let authState = Auth;
   const [rows, setRows] = useState([]);
   const [pageSize, setPageSize] = useState(5);
   const [loading, setLoading] = useState(true);
-  const [snackbar, setSnackbar] = useState(null);
   const navigate = useNavigate();
-
-  const handleCellEditCommit = React
-    .useCallback
-    /*async (params) => {
-      try {
-        // Make the HTTP request to save in the backend
-        /*
-        TODO: Send updated row!
-        const response = await mutateRow({
-          id: params.id,
-          [params.field]: params.value,
-        });
-
-        setSnackbar({
-          children: "User successfully saved",
-          severity: "success",
-        });
-        setRows((prev) =>
-          prev.map((row) =>
-            row.id === params.id ? { ...row, ...response } : row
-          )
-        );
-      } catch (error) {
-        setSnackbar({ children: "Error while saving user", severity: "error" });
-        // Restore the row in case of error
-        setRows((prev) => [...prev]);
-      }
-    },
-    [mutateRow]*/
-    ();
 
   useEffect(() => {
     setLoading(true);
@@ -75,8 +42,6 @@ export default function UserGrid() {
       setLoading(false);
     });
   }, []);
-
-  //https://mui.com/components/data-grid/selection/#usage-with-server-side-pagination
 
   return (
     <Header>
@@ -93,7 +58,6 @@ export default function UserGrid() {
         </Button>
         <DataGrid
           autoHeight
-          onCellEditCommit={handleCellEditCommit}
           pageSize={pageSize}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
           rowsPerPageOptions={[5, 10, 20]}
@@ -101,12 +65,9 @@ export default function UserGrid() {
           rows={rows}
           loading={loading}
         />
-        {!!snackbar && (
-          <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
-            <Alert {...snackbar} onClose={handleCloseSnackbar} />
-          </Snackbar>
-        )}
       </div>
     </Header>
   );
-}
+});
+
+export default UserGrid;

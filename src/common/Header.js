@@ -19,9 +19,20 @@ import Drawer from "@mui/material/Drawer";
 import { Outlet, useNavigate } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import Auth from "../state/Authentication";
+import { postJson } from "../api/postJson";
 
 const SideList = observer(() => {
   let authState = Auth;
+
+  const logout = (name) => {
+    postJson("ToDoList/logoutservice/", {
+      name: name,
+    }).then((data) => {
+      if (data.loggedOut) {
+        authState.logout(), navigate("/");
+      }
+    });
+  };
 
   const navigate = useNavigate();
   return (
@@ -79,7 +90,7 @@ const SideList = observer(() => {
             <Divider />
             <ListItem
               onClick={() => {
-                authState.logout(), navigate("/");
+                logout(authState.user);
               }}
               button
               key={"Logout"}
