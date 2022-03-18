@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from "react";
-import Input from "@mui/material/Input";
-import InputLabel from "@mui/material/InputLabel";
-import InputAdornment from "@mui/material/InputAdornment";
-import FormControl from "@mui/material/FormControl";
-import FormHelperText from "@mui/material/FormHelperText";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Button from "@mui/material/Button";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Auth from "../state/Authentication";
-import { postJson } from "../api/postJson";
+import {
+  Typography,
+  IconButton,
+  FormHelperText,
+  FormControl,
+  InputAdornment,
+  InputLabel,
+  Input,
+  Button,
+} from "@mui/material/";
+import { VisibilityOff, Visibility } from "@mui/icons-material/";
 import { observer } from "mobx-react-lite";
+import Auth from "../state/Authentication";
+import { postJson } from "../api/json";
 
 const SignIn = observer(() => {
   let authState = Auth;
@@ -23,6 +24,7 @@ const SignIn = observer(() => {
   });
   const [error, setError] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
+
   const navigate = useNavigate();
 
   const handleChange = (prop) => (event) => {
@@ -31,17 +33,15 @@ const SignIn = observer(() => {
 
   useEffect(() => {
     if (loggedIn || authState.loggedIn) {
-      navigate("/main");
+      navigate("/home");
     }
-  }, [loggedIn]);
+  }, [loggedIn, authState.loggedIn]);
 
   const validate = (name, password) => {
-    postJson(`ToDoList/loginservice/`, {
+    postJson("ToDoList/loginservice/", {
       name: name,
       password: password,
     }).then((data) => {
-      console.log(data);
-      console.log(data.errorNamePass);
       if (data.name) {
         authState.login(data.name, data.admin);
         setLoggedIn(true);
@@ -118,7 +118,7 @@ const SignIn = observer(() => {
           style={{ marginBottom: "10px" }}
           onClick={() => validate(values.name, values.password)}
         >
-          Login
+          Sign in
         </Button>
         <Button
           variant="contained"

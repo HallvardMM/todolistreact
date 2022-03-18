@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from "react";
-import Input from "@mui/material/Input";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import FormHelperText from "@mui/material/FormHelperText";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import IconButton from "@mui/material/IconButton";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Input,
+  InputLabel,
+  FormControl,
+  FormHelperText,
+  Typography,
+  Button,
+  List,
+  ListItem,
+  ListItemText,
+  IconButton,
+} from "@mui/material/";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { postJson } from "../api/postJson";
-import { fetchJson } from "../api/fetchJson";
+import { fetchJson, postJson } from "../api/json";
 import { observer } from "mobx-react-lite";
 import Auth from "../state/Authentication";
-import CircularProgress from "@mui/material/CircularProgress";
-import Box from "@mui/material/Box";
-import { useNavigate } from "react-router-dom";
+import Loading from "../common/Loading";
 
 const UsersLists = observer(() => {
   const [newListName, setNewListName] = useState("");
@@ -25,7 +25,6 @@ const UsersLists = observer(() => {
   const [readLists, setReadLists] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [loadingCreate, setLoadingCreate] = useState(false);
   const [listUpdated, setListUpdated] = useState(false);
   const navigate = useNavigate();
   let authState = Auth;
@@ -34,8 +33,7 @@ const UsersLists = observer(() => {
       name: authState.user,
     })
       .then((data) => {
-        console.log(data),
-          setOwnerLists(data.ownerList),
+        setOwnerLists(data.ownerList),
           setWriteLists(data.writeList),
           setReadLists(data.readList);
       })
@@ -90,7 +88,7 @@ const UsersLists = observer(() => {
       listName.length > 0 &&
       ownerLists.find((l) => l.name === listName) === undefined
     ) {
-      setLoadingCreate(true);
+      setLoading(true);
       postJson("/ToDoList/createList/", {
         listName: listName,
         name: authState.user,
@@ -103,7 +101,7 @@ const UsersLists = observer(() => {
             setListUpdated(!listUpdated);
           }
         })
-        .finally(setLoadingCreate(false), setNewListName(""));
+        .finally(setLoading(false), setNewListName(""));
     } else {
       setError("List name is used or has no name!");
     }
@@ -125,56 +123,46 @@ const UsersLists = observer(() => {
     <div className="UsersList">
       <div style={{ display: "flex", flexDirection: "column" }}>
         <Typography variant="h3" component="div">
-          Home page
+          Home
         </Typography>
         {loading ? (
-          <Box sx={{ display: "flex" }}>
-            <CircularProgress />
-          </Box>
+          <Loading />
         ) : (
           <div>
-            {loadingCreate ? (
-              <Box sx={{ display: "flex" }}>
-                <CircularProgress />
-              </Box>
-            ) : (
-              <div>
-                <FormControl error={error !== ""} variant="standard">
-                  <InputLabel htmlFor="name">Create new list</InputLabel>
-                  <Input
-                    id="name"
-                    value={newListName}
-                    onChange={(event) => setNewListName(event.target.value)}
-                  />
-                  {error !== "" && (
-                    <FormHelperText id="createList-error-text">
-                      {error}
-                    </FormHelperText>
-                  )}
-                </FormControl>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => sendCreatedList(newListName)}
-                >
-                  Create
-                </Button>
-              </div>
-            )}
-            <Typography variant="h6" component="div">
-              Owner access list
-            </Typography>
-            <List>{listView(ownerLists, false)}</List>
-            <Typography variant="h6" component="div">
-              Writer access lists
-            </Typography>
-            <List>{listView(writeLists, true)}</List>
-            <Typography variant="h6" component="div">
-              Reader access list
-            </Typography>
-            <List>{listView(readLists, true)}</List>{" "}
+            <FormControl error={error !== ""} variant="standard">
+              <InputLabel htmlFor="name">Create new list</InputLabel>
+              <Input
+                id="name"
+                value={newListName}
+                onChange={(event) => setNewListName(event.target.value)}
+              />
+              {error !== "" && (
+                <FormHelperText id="createList-error-text">
+                  {error}
+                </FormHelperText>
+              )}
+            </FormControl>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => sendCreatedList(newListName)}
+            >
+              Create
+            </Button>
           </div>
         )}
+        <Typography variant="h6" component="div">
+          Owner access list
+        </Typography>
+        <List>{listView(ownerLists, false)}</List>
+        <Typography variant="h6" component="div">
+          Writer access lists
+        </Typography>
+        <List>{listView(writeLists, true)}</List>
+        <Typography variant="h6" component="div">
+          Reader access list
+        </Typography>
+        <List>{listView(readLists, true)}</List>{" "}
       </div>
     </div>
   );

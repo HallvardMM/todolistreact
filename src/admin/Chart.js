@@ -1,18 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { fetchJson } from "../api/fetchJson";
-import Header from "../common/Header";
-import Typography from "@mui/material/Typography";
-import CircularProgress from "@mui/material/CircularProgress";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import { observer } from "mobx-react-lite";
-import Auth from "../state/Authentication";
+import { useState, useEffect } from "react";
+import { fetchJson } from "../api/json";
+import { Typography, Button } from "@mui/material/";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { useNavigate } from "react-router-dom";
+import Loading from "../common/Loading";
 
-const Chart = observer(() => {
-  let authState = Auth;
+const Chart = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
@@ -55,28 +49,24 @@ const Chart = observer(() => {
   }, []);
 
   return (
-    <Header>
-      <div className="adminChart" style={{ width: "100%" }}>
-        <Typography variant="h3" component="div">
-          Admin Chart
-        </Typography>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => navigate("/main")}
-        >
-          Return to home page
-        </Button>
-        {loading ? (
-          <Box sx={{ display: "flex" }}>
-            <CircularProgress />
-          </Box>
-        ) : (
-          <HighchartsReact highcharts={Highcharts} options={options} />
-        )}
-      </div>
-    </Header>
+    <div className="adminChart" style={{ width: "100%" }}>
+      <Typography variant="h3" component="div">
+        Chart
+      </Typography>
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={() => navigate("/home")}
+      >
+        Return to home page
+      </Button>
+      {loading ? (
+        <Loading />
+      ) : (
+        <HighchartsReact highcharts={Highcharts} options={options} />
+      )}
+    </div>
   );
-});
+};
 
 export default Chart;

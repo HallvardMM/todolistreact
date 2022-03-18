@@ -3,36 +3,10 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import UserGrid from "./admin/UserGrid";
-import Chart from "./admin/Chart";
-import Profile from "./user/Profile";
-import CreateUser from "./user/CreateUser";
-import Main from "./todolist/Main";
-import ListView from "./todolist/ListView";
-import ChangeAccess from "./todolist/ChangeAccess";
-import BasicHeader from "./common/BasicHeader";
-import { Typography } from "@mui/material";
-import ThemeContainer from "./common/ThemeContainer";
-import NoAccess from "./common/NoAccess";
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeContainer>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="main" element={<Main />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="admin" element={<UserGrid />} />
-          <Route path="adminChart" element={<Chart />} />
-          <Route path="createuser" element={<CreateUser />} />
-          <Route path="listview:listId" element={<ListView />} />
-          <Route path="changeaccess:listId" element={<ChangeAccess />} />
-          <Route path="*" element={<NoAccess text={"Page not found!"} />} />
-        </Routes>
-      </BrowserRouter>
-    </ThemeContainer>
+    <App />
   </React.StrictMode>,
   document.getElementById("root")
 );

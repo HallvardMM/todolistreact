@@ -1,21 +1,20 @@
-import React, { useState, useEffect } from "react";
-import Input from "@mui/material/Input";
-import InputLabel from "@mui/material/InputLabel";
-import InputAdornment from "@mui/material/InputAdornment";
-import FormControl from "@mui/material/FormControl";
-import FormHelperText from "@mui/material/FormHelperText";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Button from "@mui/material/Button";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import BasicHeader from "../common/BasicHeader";
-import { postJson } from "../api/postJson";
-import Auth from "../state/Authentication";
 import { observer } from "mobx-react-lite";
+import Auth from "../state/Authentication";
+import { postJson } from "../api/json";
+import {
+  Input,
+  InputLabel,
+  InputAdornment,
+  FormControl,
+  FormHelperText,
+  Typography,
+  IconButton,
+  Button,
+} from "@mui/material/";
+import { Visibility, VisibilityOff } from "@mui/icons-material/";
 import validateEmail from "../common/Email";
-import { Tty } from "@mui/icons-material";
 
 const CreateUser = observer(() => {
   let authState = Auth;
@@ -32,7 +31,7 @@ const CreateUser = observer(() => {
 
   useEffect(() => {
     if (authState.loggedIn) {
-      navigate("/main");
+      navigate("/home");
     }
   }, []);
 
@@ -87,108 +86,106 @@ const CreateUser = observer(() => {
   };
 
   return (
-    <BasicHeader>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
       <div
         style={{
           display: "flex",
+          flexDirection: "column",
+          width: "50%",
           justifyContent: "center",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            width: "50%",
-            justifyContent: "center",
+        <Typography variant="h3" component="div">
+          Create user
+        </Typography>
+        <FormControl error={error !== ""} variant="standard">
+          <InputLabel htmlFor="name">Name</InputLabel>
+          <Input
+            id="name"
+            value={values.name}
+            onChange={handleChange("name")}
+          />
+        </FormControl>
+        <FormControl error={error !== ""} variant="standard">
+          <InputLabel htmlFor="email">Email</InputLabel>
+          <Input
+            id="email"
+            value={values.email}
+            onChange={handleChange("email")}
+          />
+        </FormControl>
+        <FormControl error={error !== ""} variant="standard">
+          <InputLabel htmlFor="password">Password</InputLabel>
+          <Input
+            id="password"
+            type={values.showPassword ? "text" : "password"}
+            value={values.password}
+            onChange={handleChange("password")}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={() => handleClickShowPassword(false)}
+                  onMouseDown={() => handleMouseDownPassword}
+                >
+                  {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        </FormControl>
+        <FormControl error={error !== ""} variant="standard">
+          <InputLabel htmlFor="rePassword">Re-enter password</InputLabel>
+          <Input
+            id="rePassword"
+            type={values.showRePassword ? "text" : "password"}
+            value={values.rePassword}
+            onChange={handleChange("rePassword")}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle re-enter password visibility"
+                  onClick={() => handleClickShowPassword(true)}
+                  onMouseDown={() => handleMouseDownPassword}
+                >
+                  {values.showRePassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+          {error && (
+            <FormHelperText id="password-error-text">{error}</FormHelperText>
+          )}
+        </FormControl>
+        <Button
+          variant="contained"
+          color="secondary"
+          style={{ marginBottom: "10px" }}
+          onClick={() => {
+            if (values.password === values.rePassword) {
+              sendUser(values.name, values.email, values.password);
+            } else {
+              setError("Passwords are not the same");
+            }
           }}
         >
-          <Typography variant="h3" component="div">
-            Create user
-          </Typography>
-          <FormControl error={error !== ""} variant="standard">
-            <InputLabel htmlFor="name">Name</InputLabel>
-            <Input
-              id="name"
-              value={values.name}
-              onChange={handleChange("name")}
-            />
-          </FormControl>
-          <FormControl error={error !== ""} variant="standard">
-            <InputLabel htmlFor="email">Email</InputLabel>
-            <Input
-              id="email"
-              value={values.email}
-              onChange={handleChange("email")}
-            />
-          </FormControl>
-          <FormControl error={error !== ""} variant="standard">
-            <InputLabel htmlFor="password">Password</InputLabel>
-            <Input
-              id="password"
-              type={values.showPassword ? "text" : "password"}
-              value={values.password}
-              onChange={handleChange("password")}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={() => handleClickShowPassword(false)}
-                    onMouseDown={() => handleMouseDownPassword}
-                  >
-                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-          </FormControl>
-          <FormControl error={error !== ""} variant="standard">
-            <InputLabel htmlFor="rePassword">Re-enter password</InputLabel>
-            <Input
-              id="rePassword"
-              type={values.showRePassword ? "text" : "password"}
-              value={values.rePassword}
-              onChange={handleChange("rePassword")}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle re-enter password visibility"
-                    onClick={() => handleClickShowPassword(true)}
-                    onMouseDown={() => handleMouseDownPassword}
-                  >
-                    {values.showRePassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-            {error && (
-              <FormHelperText id="password-error-text">{error}</FormHelperText>
-            )}
-          </FormControl>
-          <Button
-            variant="contained"
-            color="secondary"
-            style={{ marginBottom: "10px" }}
-            onClick={() => {
-              if (values.password === values.rePassword) {
-                sendUser(values.name, values.email, values.password);
-              } else {
-                setError("Passwords are not the same");
-              }
-            }}
-          >
-            Create
-          </Button>
+          Create
+        </Button>
 
-          <Button
-            color="secondary"
-            variant="contained"
-            onClick={() => navigate("/")}
-          >
-            Back
-          </Button>
-        </div>
+        <Button
+          color="secondary"
+          variant="contained"
+          onClick={() => navigate("/")}
+        >
+          Back
+        </Button>
       </div>
-    </BasicHeader>
+    </div>
   );
 });
 

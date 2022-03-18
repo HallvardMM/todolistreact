@@ -1,3 +1,13 @@
+export async function fetchJson(url) {
+  try {
+    let res = await fetch(url);
+    return await res.json();
+  } catch (error) {
+    console.log(error);
+    return { error: error };
+  }
+}
+
 export async function postJson(url = "", data = {}) {
   // Default options are marked with *
   try {

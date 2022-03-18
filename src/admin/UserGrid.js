@@ -1,12 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import { observer } from "mobx-react-lite";
-import Auth from "../state/Authentication";
-import { fetchJson } from "../api/fetchJson";
-import Header from "../common/Header";
+import { Typography, Button } from "@mui/material/";
+import { fetchJson } from "../api/json";
 
 const columns = [
   { field: "id", headerName: "ID", width: 300 },
@@ -28,8 +24,7 @@ const columns = [
   { field: "created", headerName: "Created", width: 300 },
 ];
 
-const UserGrid = observer(() => {
-  let authState = Auth;
+const UserGrid = () => {
   const [rows, setRows] = useState([]);
   const [pageSize, setPageSize] = useState(5);
   const [loading, setLoading] = useState(true);
@@ -44,30 +39,28 @@ const UserGrid = observer(() => {
   }, []);
 
   return (
-    <Header>
-      <div className="adminPage" style={{ width: "100%" }}>
-        <Typography variant="h3" component="div">
-          Admin Page
-        </Typography>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => navigate("/main")}
-        >
-          Return to home page
-        </Button>
-        <DataGrid
-          autoHeight
-          pageSize={pageSize}
-          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-          rowsPerPageOptions={[5, 10, 20]}
-          columns={columns}
-          rows={rows}
-          loading={loading}
-        />
-      </div>
-    </Header>
+    <div className="adminPage" style={{ width: "100%" }}>
+      <Typography variant="h3" component="div">
+        Admin
+      </Typography>
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={() => navigate("/home")}
+      >
+        Return to home page
+      </Button>
+      <DataGrid
+        autoHeight
+        pageSize={pageSize}
+        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+        rowsPerPageOptions={[5, 10, 20]}
+        columns={columns}
+        rows={rows}
+        loading={loading}
+      />
+    </div>
   );
-});
+};
 
 export default UserGrid;

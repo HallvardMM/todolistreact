@@ -1,17 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import Auth from "../state/Authentication";
 import { TextField, MenuItem, Button } from "@mui/material";
-import { fetchJson } from "../api/fetchJson";
+import { fetchJson } from "../api/json";
 
-const accessTypes = [
-  {
-    value: "read",
-  },
-  {
-    value: "write",
-  },
-];
+const accessTypes = [{ value: "read" }, { value: "write" }];
 
 const ShareAccess = observer((props) => {
   let authState = Auth;

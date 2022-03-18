@@ -1,13 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { fetchJson } from "../api/fetchJson";
-import { observer } from "mobx-react-lite";
-import Auth from "../state/Authentication";
-import CircularProgress from "@mui/material/CircularProgress";
-import Box from "@mui/material/Box";
+import { useState, useEffect } from "react";
+import { fetchJson } from "../api/json";
 import Typography from "@mui/material/Typography";
+import Loading from "../common/Loading";
 
-const PointGroup = observer((props) => {
-  let authState = Auth;
+const PointGroup = (props) => {
   const [pgName, setPgName] = useState("");
   const [points, setPoints] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,9 +17,7 @@ const PointGroup = observer((props) => {
   return (
     <div>
       {loading ? (
-        <Box sx={{ display: "flex" }}>
-          <CircularProgress />
-        </Box>
+        <Loading />
       ) : (
         <div>
           <Typography variant="h4" component="div">
@@ -31,7 +25,7 @@ const PointGroup = observer((props) => {
           </Typography>
           <div>
             {points?.map((object, id) => (
-              <Typography variant="subtitle1" component="div">
+              <Typography key={object.name} variant="subtitle1" component="div">
                 {"Point: " + object.name}
               </Typography>
             ))}
@@ -40,6 +34,6 @@ const PointGroup = observer((props) => {
       )}
     </div>
   );
-});
+};
 
 export default PointGroup;

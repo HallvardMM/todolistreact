@@ -1,28 +1,35 @@
 import React, { useState } from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import PersonIcon from "@mui/icons-material/Person";
-import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
-import BarChartIcon from "@mui/icons-material/BarChart";
-import LogoutIcon from "@mui/icons-material/Logout";
-import Drawer from "@mui/material/Drawer";
+import {
+  AppBar,
+  Drawer,
+  Box,
+  Toolbar,
+  Typography,
+  Button,
+  IconButton,
+  List,
+  Divider,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material/";
+import {
+  Menu,
+  Person,
+  SupervisorAccount,
+  BarChart,
+  Logout,
+  Home,
+} from "@mui/icons-material/";
 import { Outlet, useNavigate } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import Auth from "../state/Authentication";
-import { postJson } from "../api/postJson";
+import { postJson } from "../api/json";
+import BasicHeader from "./BasicHeader";
 
-const SideList = observer(() => {
+const SideList = observer((props) => {
   let authState = Auth;
+  const navigate = useNavigate();
 
   const logout = (name) => {
     postJson("ToDoList/logoutservice/", {
@@ -34,7 +41,11 @@ const SideList = observer(() => {
     });
   };
 
-  const navigate = useNavigate();
+  const navigateAndClose = (path) => {
+    navigate(path);
+    props.close();
+  };
+
   return (
     <div>
       {authState.loggedIn && (
@@ -57,31 +68,45 @@ const SideList = observer(() => {
           </Typography>
           <List>
             <ListItem
-              onClick={() => navigate("/profile")}
+              onClick={() => navigateAndClose("/home")}
+              button
+              key={"Home"}
+            >
+              <ListItemIcon>
+                <Home color="secondary" />
+              </ListItemIcon>
+              <ListItemText primary={"Home"} />
+            </ListItem>
+            <ListItem
+              onClick={() => navigateAndClose("/profile")}
               button
               key={"Profile"}
             >
               <ListItemIcon>
-                <PersonIcon color="secondary" />
+                <Person color="secondary" />
               </ListItemIcon>
               <ListItemText primary={"Profile"} />
             </ListItem>
             {authState.admin && (
               <ListItem
-                onClick={() => navigate("/adminChart")}
+                onClick={() => navigateAndClose("/adminChart")}
                 button
                 key={"adminChart"}
               >
                 <ListItemIcon>
-                  <BarChartIcon color="secondary" />
+                  <BarChart color="secondary" />
                 </ListItemIcon>
                 <ListItemText primary={"Chart"} />
               </ListItem>
             )}
             {authState.admin && (
-              <ListItem onClick={() => navigate("/admin")} button key={"Admin"}>
+              <ListItem
+                onClick={() => navigateAndClose("/admin")}
+                button
+                key={"Admin"}
+              >
                 <ListItemIcon>
-                  <SupervisorAccountIcon color="secondary" />
+                  <SupervisorAccount color="secondary" />
                 </ListItemIcon>
                 <ListItemText primary={"Admin"} />
               </ListItem>
@@ -89,15 +114,16 @@ const SideList = observer(() => {
             <Divider />
             <ListItem
               onClick={() => {
+                props.close();
                 logout(authState.user);
               }}
               button
-              key={"Logout"}
+              key={"Sign out"}
             >
               <ListItemIcon>
-                <LogoutIcon color="secondary" />
+                <Logout color="secondary" />
               </ListItemIcon>
-              <ListItemText primary={"Logout"} />
+              <ListItemText primary={"Sign Out"} />
             </ListItem>
           </List>
         </div>
@@ -111,68 +137,76 @@ const Header = observer((props) => {
   let authState = Auth;
   const [drawer, setDrawer] = useState(false);
   const navigate = useNavigate();
+
   return (
     <div>
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
-          <Toolbar>
-            {authState.loggedIn && (
-              <IconButton
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="menu"
-                sx={{ mr: 2 }}
-                onClick={() => setDrawer(!drawer)}
-              >
-                <MenuIcon />
-              </IconButton>
-            )}
-            <Drawer open={drawer} onClose={() => setDrawer(false)}>
-              <SideList
-                name={authState.user}
-                admin={authState.admin}
-                loggedIn={authState.loggedIn}
-              ></SideList>
-            </Drawer>
-            {authState.loggedIn && (
-              <Typography
-                variant="subtitle1"
-                component="div"
-                sx={{ flexGrow: 1 }}
-              >
-                Signed In as: {authState.user}
-              </Typography>
-            )}
-            <Typography
-              onClick={() => navigate("/main")}
-              variant="h6"
-              sx={{ flexGrow: 75 }}
-              component="span"
-              textAlign="center"
-            >
-              ToDoList
-            </Typography>
-            {authState.admin && (
-              <Button onClick={() => navigate("/admin")} color="inherit">
-                Admin
-              </Button>
-            )}
-            {authState.admin && (
-              <Button onClick={() => navigate("/adminChart")} color="inherit">
-                Chart
-              </Button>
-            )}
-            {authState.loggedIn && (
-              <Button onClick={() => navigate("/profile")} color="inherit">
-                Profile
-              </Button>
-            )}
-          </Toolbar>
-        </AppBar>
-      </Box>
-      {props.children}
-      <Outlet />
+      {authState.loggedIn ? (
+        <div>
+          <Box sx={{ flexGrow: 1 }}>
+            <AppBar position="static">
+              <Toolbar>
+                <IconButton
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu"
+                  sx={{ mr: 2 }}
+                  onClick={() => setDrawer(true)}
+                >
+                  <Menu />
+                </IconButton>
+                <Drawer open={!!drawer} onClose={() => setDrawer(false)}>
+                  <SideList
+                    close={setDrawer}
+                    name={authState.user}
+                    admin={authState.admin}
+                    loggedIn={authState.loggedIn}
+                  ></SideList>
+                </Drawer>
+                <Typography
+                  variant="subtitle1"
+                  component="div"
+                  sx={{ flexGrow: 1 }}
+                >
+                  Signed In as: {authState.user}
+                </Typography>
+                <Typography
+                  onClick={() => navigate("/home")}
+                  variant="h6"
+                  sx={{ flexGrow: 75 }}
+                  component="span"
+                  textAlign="center"
+                >
+                  ToDoList
+                </Typography>
+                {authState.admin && (
+                  <>
+                    <Button onClick={() => navigate("/admin")} color="inherit">
+                      Admin
+                    </Button>
+                    <Button
+                      onClick={() => navigate("/adminChart")}
+                      color="inherit"
+                    >
+                      Chart
+                    </Button>
+                  </>
+                )}
+                <Button onClick={() => navigate("/profile")} color="inherit">
+                  Profile
+                </Button>
+                <Button onClick={() => navigate("/home")} color="inherit">
+                  Home
+                </Button>
+              </Toolbar>
+            </AppBar>
+          </Box>
+          {props.children}
+          <Outlet />
+        </div>
+      ) : (
+        <BasicHeader>{props.children}</BasicHeader>
+      )}
     </div>
   );
 });

@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { fetchJson } from "../api/fetchJson";
-import Typography from "@mui/material/Typography";
-import Input from "@mui/material/Input";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import FormHelperText from "@mui/material/FormHelperText";
+import { useState, useEffect } from "react";
+import { fetchJson } from "../api/json";
+import {
+  Button,
+  Typography,
+  Input,
+  InputLabel,
+  FormControl,
+  FormHelperText,
+} from "@mui/material/";
 import { useParams, useNavigate } from "react-router-dom";
-import Header from "../common/Header";
 import { observer } from "mobx-react-lite";
 import Auth from "../state/Authentication";
-import CircularProgress from "@mui/material/CircularProgress";
-import Box from "@mui/material/Box";
-import { Button } from "@mui/material";
 import ShareAccess from "./ShareAccess";
 import PointGroup from "./PointGroup";
+import Loading from "../common/Loading";
 
 const ListView = observer(() => {
   let params = useParams();
@@ -70,91 +70,87 @@ const ListView = observer(() => {
   }
 
   return (
-    <Header>
-      <div className="CreateUser">
-        {loading ? (
-          <Box sx={{ display: "flex" }}>
-            <CircularProgress />
-          </Box>
-        ) : (
-          <div>
-            <Typography variant="h3" component="div">
-              {listName}
-            </Typography>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                marginBottom: "10px",
-              }}
+    <div className="CreateUser">
+      {loading ? (
+        <Loading />
+      ) : (
+        <div>
+          <Typography variant="h3" component="div">
+            {listName}
+          </Typography>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              marginBottom: "10px",
+            }}
+          >
+            <Button
+              color="secondary"
+              variant="contained"
+              onClick={() => navigate("/home")}
             >
-              <Button
-                color="secondary"
-                variant="contained"
-                onClick={() => navigate("/main")}
-              >
-                Back
-              </Button>
-              {isOwner && (
-                <div>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => navigate(`/changeaccess${params.listId}`)}
-                  >
-                    Change access
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => setShowShareAccess(!showShareAccess)}
-                  >
-                    {showShareAccess ? "Hide share" : "Share access"}
-                  </Button>
-                </div>
-              )}
-            </div>
-            {showShareAccess && (
-              <ShareAccess
-                listId={params.listId}
-                readers={readers}
-                writers={writers}
-                setShowShareAccess={setShowShareAccess}
-              ></ShareAccess>
-            )}
+              Back
+            </Button>
             {isOwner && (
               <div>
-                <FormControl error={error !== ""} variant="standard">
-                  <InputLabel htmlFor="groupName">New group</InputLabel>
-                  <Input
-                    id="groupName"
-                    value={newGroupName}
-                    onChange={(event) => setNewGroupName(event.target.value)}
-                  />
-                  {error !== "" && (
-                    <FormHelperText id="createGroup-error-text">
-                      {error}
-                    </FormHelperText>
-                  )}
-                </FormControl>
                 <Button
                   variant="contained"
                   color="secondary"
-                  onClick={() => sendCreatedGroup(newGroupName)}
+                  onClick={() => navigate(`/changeaccess${params.listId}`)}
                 >
-                  Create
+                  Change access
+                </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => setShowShareAccess(!showShareAccess)}
+                >
+                  {showShareAccess ? "Hide share" : "Share access"}
                 </Button>
               </div>
             )}
-            {pointGroups?.map((object, id) => (
-              <div>
-                <PointGroup id={id} pgId={object}></PointGroup>
-              </div>
-            ))}
           </div>
-        )}
-      </div>
-    </Header>
+          {showShareAccess && (
+            <ShareAccess
+              listId={params.listId}
+              readers={readers}
+              writers={writers}
+              setShowShareAccess={setShowShareAccess}
+            ></ShareAccess>
+          )}
+          {isOwner && (
+            <div>
+              <FormControl error={error !== ""} variant="standard">
+                <InputLabel htmlFor="groupName">New group</InputLabel>
+                <Input
+                  id="groupName"
+                  value={newGroupName}
+                  onChange={(event) => setNewGroupName(event.target.value)}
+                />
+                {error !== "" && (
+                  <FormHelperText id="createGroup-error-text">
+                    {error}
+                  </FormHelperText>
+                )}
+              </FormControl>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => sendCreatedGroup(newGroupName)}
+              >
+                Create
+              </Button>
+            </div>
+          )}
+          {pointGroups?.map((object, id) => (
+            <div>
+              <PointGroup id={id} pgId={object}></PointGroup>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 });
 

@@ -1,13 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import Auth from "../state/Authentication";
-import { TextField, MenuItem, Button } from "@mui/material";
-import { fetchJson } from "../api/fetchJson";
-import Typography from "@mui/material/Typography";
-import Header from "../common/Header";
+import { Button, Typography } from "@mui/material";
+import { fetchJson } from "../api/json";
 import { useParams, useNavigate } from "react-router-dom";
-import CircularProgress from "@mui/material/CircularProgress";
-import Box from "@mui/material/Box";
+import Loading from "../common/Loading";
 
 const ChangeAccess = observer(() => {
   let authState = Auth;
@@ -54,11 +51,9 @@ const ChangeAccess = observer(() => {
   }
 
   return (
-    <Header>
+    <div>
       {loading ? (
-        <Box sx={{ display: "flex" }}>
-          <CircularProgress />
-        </Box>
+        <Loading />
       ) : (
         <div>
           <Typography variant="h3" component="div">
@@ -134,7 +129,7 @@ const ChangeAccess = observer(() => {
           ))}
         </div>
       )}
-    </Header>
+    </div>
   );
 });
 
