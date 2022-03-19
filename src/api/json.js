@@ -1,3 +1,5 @@
+// Functions used for sending/retricing Json data
+
 export async function fetchJson(url) {
   try {
     let res = await fetch(url);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   AppBar,
   Drawer,
@@ -7,131 +7,13 @@ import {
   Typography,
   Button,
   IconButton,
-  List,
-  Divider,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
 } from "@mui/material/";
-import {
-  Menu,
-  Person,
-  SupervisorAccount,
-  BarChart,
-  Logout,
-  Home,
-} from "@mui/icons-material/";
+import { Menu } from "@mui/icons-material/";
 import { Outlet, useNavigate } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import Auth from "../state/Authentication";
-import { postJson } from "../api/json";
 import BasicHeader from "./BasicHeader";
-
-const SideList = observer((props) => {
-  let authState = Auth;
-  const navigate = useNavigate();
-
-  const logout = (name) => {
-    postJson("ToDoList/logoutservice/", {
-      name: name,
-    }).then((data) => {
-      if (data.loggedOut) {
-        authState.logout(), navigate("/");
-      }
-    });
-  };
-
-  const navigateAndClose = (path) => {
-    navigate(path);
-    props.close();
-  };
-
-  return (
-    <div>
-      {authState.loggedIn && (
-        <div>
-          <Typography
-            color="primary"
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1 }}
-          >
-            ToDoList
-          </Typography>
-          <Typography
-            color="primary"
-            variant="subtitle1"
-            component="div"
-            sx={{ flexGrow: 1 }}
-          >
-            Signed In as: {authState.name}
-          </Typography>
-          <List>
-            <ListItem
-              onClick={() => navigateAndClose("/home")}
-              button
-              key={"Home"}
-            >
-              <ListItemIcon>
-                <Home color="secondary" />
-              </ListItemIcon>
-              <ListItemText primary={"Home"} />
-            </ListItem>
-            <ListItem
-              onClick={() => navigateAndClose("/profile")}
-              button
-              key={"Profile"}
-            >
-              <ListItemIcon>
-                <Person color="secondary" />
-              </ListItemIcon>
-              <ListItemText primary={"Profile"} />
-            </ListItem>
-            {authState.admin && (
-              <ListItem
-                onClick={() => navigateAndClose("/adminChart")}
-                button
-                key={"adminChart"}
-              >
-                <ListItemIcon>
-                  <BarChart color="secondary" />
-                </ListItemIcon>
-                <ListItemText primary={"Chart"} />
-              </ListItem>
-            )}
-            {authState.admin && (
-              <ListItem
-                onClick={() => navigateAndClose("/admin")}
-                button
-                key={"Admin"}
-              >
-                <ListItemIcon>
-                  <SupervisorAccount color="secondary" />
-                </ListItemIcon>
-                <ListItemText primary={"Admin"} />
-              </ListItem>
-            )}
-            <Divider />
-            <ListItem
-              onClick={() => {
-                props.close();
-                logout(authState.user);
-              }}
-              button
-              key={"Sign out"}
-            >
-              <ListItemIcon>
-                <Logout color="secondary" />
-              </ListItemIcon>
-              <ListItemText primary={"Sign Out"} />
-            </ListItem>
-          </List>
-        </div>
-      )}
-      <Outlet />
-    </div>
-  );
-});
+import SideList from "./SideList";
 
 const Header = observer((props) => {
   let authState = Auth;

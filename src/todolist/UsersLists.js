@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Input,
   InputLabel,
@@ -8,15 +7,12 @@ import {
   Typography,
   Button,
   List,
-  ListItem,
-  ListItemText,
-  IconButton,
 } from "@mui/material/";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { fetchJson, postJson } from "../api/json";
+import { postJson } from "../api/json";
 import { observer } from "mobx-react-lite";
 import Auth from "../state/Authentication";
 import Loading from "../common/Loading";
+import DisplayLists from "./DisplayLists";
 
 const UsersLists = observer(() => {
   const [newListName, setNewListName] = useState("");
@@ -26,7 +22,6 @@ const UsersLists = observer(() => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [listUpdated, setListUpdated] = useState(false);
-  const navigate = useNavigate();
   let authState = Auth;
   useEffect(() => {
     postJson(`/ToDoList/getUsersLists/`, {
@@ -40,47 +35,9 @@ const UsersLists = observer(() => {
       .finally(setLoading(false));
   }, [listUpdated]);
 
-  let listView = (listToView, notDelete) => {
-    return listToView?.map((object, id) => (
-      <div /* style={{ width: "300px" }} */>
-        {notDelete ? (
-          <ListItem
-            button
-            key={id}
-            onClick={() => navigate(`/listview${object.id}`)}
-          >
-            <ListItemText
-              primary={"List: " + object.name}
-              secondary={"Owner: " + object.owner}
-            />
-          </ListItem>
-        ) : (
-          <ListItem
-            key={id}
-            button
-            onClick={() => navigate(`/listview${object.id}`)}
-            secondaryAction={
-              <IconButton
-                onClick={(e) => {
-                  e.stopPropagation(), deleteList(object.id);
-                }}
-                color="danger"
-                edge="end"
-                aria-label="delete"
-              >
-                <DeleteIcon />
-              </IconButton>
-            }
-          >
-            <ListItemText
-              primary={"List: " + object.name}
-              secondary={"Owner: " + object.owner}
-            />
-          </ListItem>
-        )}
-      </div>
-    ));
-  };
+  function updateLists() {
+    setListUpdated(!listUpdated);
+  }
 
   function sendCreatedList(listName) {
     if (
@@ -98,25 +55,14 @@ const UsersLists = observer(() => {
             setError("Could not create list!");
           } else {
             //Trigger refetch to get ID created by server
-            setListUpdated(!listUpdated);
+            setError("");
+            updateLists();
           }
         })
         .finally(setLoading(false), setNewListName(""));
     } else {
       setError("List name is used or has no name!");
     }
-  }
-
-  function deleteList(listId) {
-    setLoading(true);
-    fetchJson(`/ToDoList/deleteList/${listId}`).then((data) => {
-      if (!(data === undefined)) {
-        if (data.success) {
-          //Trigger refetch to get ID created by server
-          setListUpdated(!listUpdated);
-        }
-      }
-    });
   }
 
   return (
@@ -154,15 +100,15 @@ const UsersLists = observer(() => {
         <Typography variant="h6" component="div">
           Owner access list
         </Typography>
-        <List>{listView(ownerLists, false)}</List>
+        <List>{DisplayLists(ownerLists, false, updateLists)}</List>
         <Typography variant="h6" component="div">
           Writer access lists
         </Typography>
-        <List>{listView(writeLists, true)}</List>
+        <List>{DisplayLists(writeLists, true, updateLists)}</List>
         <Typography variant="h6" component="div">
           Reader access list
         </Typography>
-        <List>{listView(readLists, true)}</List>{" "}
+        <List>{DisplayLists(readLists, true, updateLists)}</List>{" "}
       </div>
     </div>
   );

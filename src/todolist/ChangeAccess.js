@@ -1,13 +1,10 @@
 import { useState, useEffect } from "react";
-import { observer } from "mobx-react-lite";
-import Auth from "../state/Authentication";
 import { Button, Typography } from "@mui/material";
 import { fetchJson } from "../api/json";
 import { useParams, useNavigate } from "react-router-dom";
 import Loading from "../common/Loading";
 
-const ChangeAccess = observer(() => {
-  let authState = Auth;
+const ChangeAccess = () => {
   let params = useParams();
   const [loading, setLoading] = useState(true);
   const [listName, setListName] = useState("");
@@ -131,6 +128,6 @@ const ChangeAccess = observer(() => {
       )}
     </div>
   );
-});
+};
 
 export default ChangeAccess;

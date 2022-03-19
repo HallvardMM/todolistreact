@@ -5,7 +5,7 @@ import { Typography, Button } from "@mui/material/";
 import { fetchJson } from "../api/json";
 
 const columns = [
-  { field: "id", headerName: "ID", width: 300 },
+  { field: "id", headerName: "ID", width: 400 },
   {
     field: "name",
     headerName: "Name",
@@ -14,14 +14,14 @@ const columns = [
   {
     field: "email",
     headerName: "Email",
-    width: 300,
+    width: 400,
   },
   {
     field: "admin",
     headerName: "Admin",
-    width: 300,
+    width: 200,
   },
-  { field: "created", headerName: "Created", width: 300 },
+  { field: "created", headerName: "Created", width: 200 },
 ];
 
 const UserGrid = () => {
